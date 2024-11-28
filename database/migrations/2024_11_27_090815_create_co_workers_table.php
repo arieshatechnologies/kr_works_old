@@ -13,11 +13,14 @@ return new class extends Migration
     {
         Schema::create('co_workers', function (Blueprint $table) {
             $table->id();
-            $table->string('co_worker_name'); // Co-worker's name
+            $table->integer('co_worker_id'); // Co-worker's name
             $table->timestamp('date_and_time'); // Date and time
-            $table->integer('normal_saree'); // Normal saree count
-            $table->integer('border_saree'); // Border saree count
-            $table->integer('big_border_saree'); // Big border saree count
+            $table->integer('ns'); // Normal saree count
+            $table->integer('bs'); // Border saree count
+            $table->integer('bbs'); // Big border saree count
+            $table->integer('rns'); // return
+            $table->integer('rbs'); // return
+            $table->integer('rbbs'); // return
             $table->timestamps();
         });
     }

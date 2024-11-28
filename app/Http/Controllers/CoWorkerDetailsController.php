@@ -1,22 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\CoWorker;
+use App\Models\CoWorkerDetails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class CoWorkerController extends Controller
-{
-    /**
-     * Display a listing of the suppliers.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+class CoWorkerDetailsController extends Controller
+{   
     public function index()
     {
-        $coWorkers = CoWorker::all();
-
+        $coWorkers = CoWorkerDetails::all();
+    
         if ($coWorkers->isEmpty()) {
             return response()->json([
                 'status' => 'failure',
@@ -24,7 +18,7 @@ class CoWorkerController extends Controller
                 'data' => [],
             ], 404);
         }
-
+    
         return response()->json([
             'status' => 'success',
             'message' => 'Co-workers found',
@@ -32,28 +26,12 @@ class CoWorkerController extends Controller
         ], 200);
     }
 
-
-    /**
-     * Store a newly created supplier in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    
-    /**
-     * Display the specified supplier.
-     *
-     * @param  \App\Models\CoWorker  $coWorkers
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'co_worker_name' => 'required|string|max:255',
-            'date_and_time' => 'required|date',
-            'ns' => 'required|integer',
-            'bs' => 'required|integer',
-            'bbs' => 'required|integer',
+            'name' => 'required|string|max:255',
+            'address' => 'required|string',
+            'phone_no' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -63,7 +41,7 @@ class CoWorkerController extends Controller
             ], 422);
         }
 
-        $coWorker = CoWorker::create($validator->validated());
+        $coWorker = CoWorkerDetails::create($validator->validated());
 
         return response()->json([
             'status' => 'success',
@@ -72,16 +50,9 @@ class CoWorkerController extends Controller
         ], 201);
     }
 
-    /**
-     * Update the specified supplier in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\CoWorker  $coWorkers
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function update(Request $request, $id)
     {
-        $coWorker = CoWorker::find($id);
+        $coWorker = CoWorkerDetails::find($id);
 
         if (!$coWorker) {
             return response()->json([
@@ -91,14 +62,9 @@ class CoWorkerController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'co_worker_id' => 'sometimes|required|integer|max:255',
-            'date_and_time' => 'sometimes|required|date',
-            'ns' => 'sometimes|required|integer',
-            'bs' => 'sometimes|required|integer',
-            'bbs' => 'sometimes|required|integer',
-            'rns' => 'sometimes|required|integer',
-            'rbs' => 'sometimes|required|integer',
-            'rbbs' => 'sometimes|required|integer',
+            'name' => 'sometimes|string|max:255',
+            'address' => 'sometimes|string',
+            'phone_no' => 'sometimes|string',
         ]);
 
         if ($validator->fails()) {
@@ -112,20 +78,14 @@ class CoWorkerController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Co-worker updated successfully',
+            'message' => 'Co-worker details updated successfully',
             'data' => $coWorker,
         ], 200);
     }
 
-    /**
-     * Remove the specified supplier from storage.
-     *
-     * @param  \App\Models\CoWorker  $coWorkers
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function destroy(Request $request)
     {
-        $coWorker = CoWorker::find($request->id);
+        $coWorker = CoWorkerDetails::find($request->id);
 
         if (!$coWorker) {
             return response()->json([
@@ -138,24 +98,24 @@ class CoWorkerController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Co-worker deleted successfully',
+            'message' => 'Co-worker details deleted successfully',
         ], 200);
     }
 
     public function show($id)
     {
-        $coWorker = CoWorker::find($id);
+        $coWorker = CoWorkerDetails::find($id);
 
         if (!$coWorker) {
             return response()->json([
                 'status' => 'failure',
-                'message' => 'Co-worker not found',
+                'message' => 'Co-worker details not found',
             ], 404);
         }
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Co-worker found',
+            'message' => 'Co-worker details found',
             'data' => $coWorker,
         ], 200);
     }

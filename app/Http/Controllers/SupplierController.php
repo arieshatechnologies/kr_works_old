@@ -111,6 +111,6 @@ class SupplierController extends Controller
         }
         $supplier->delete();
 
-        return response()->json(["status" => "Success","message" => "Record deleted successfully."], 204);
+        return response()->json(["status" => "success","message" => "Record deleted successfully."], 204);
     }
 }

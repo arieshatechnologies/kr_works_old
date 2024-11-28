@@ -10,11 +10,14 @@ class CoWorker extends Model
     use HasFactory;
 
     protected $fillable = [
-        'co_worker_name',
+        'co_worker_id',
         'date_and_time',
-        'normal_saree',
-        'border_saree',
-        'big_border_saree',
+        'ns',
+        'bs',
+        'bbs',
+        'rns',
+        'rbs',
+        'rbbs',
     ];
 }
 
