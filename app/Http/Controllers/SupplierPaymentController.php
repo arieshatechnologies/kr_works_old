@@ -51,7 +51,7 @@ class SupplierPaymentController extends Controller
             ], 422);
         }
 
-        $this->updateSuppliersStatus($request->startDate, $request->endDate);
+        $this->updateSuppliersStatus($request->supplier_id, $request->startDate, $request->endDate);
 
         $supplier = supplier_payment::create($validator->validated());
 
@@ -93,7 +93,7 @@ class SupplierPaymentController extends Controller
                 'message' => $validator->errors()->first(), // Get the first validation error
             ], 422);
         }
-        $this->updateSuppliersStatus($request->startDate, $request->endDate);
+        $this->updateSuppliersStatus($request->supplier_id, $request->startDate, $request->endDate);
         // Proceed with storing the data
         $validated = $validator->validated();
 
@@ -119,10 +119,11 @@ class SupplierPaymentController extends Controller
     }
 
 
-    public function updateSuppliersStatus($startDate, $endDate)
+    public function updateSuppliersStatus($supplier_id,$startDate, $endDate)
     {
         // Update the suppliers table where the date is between start_date and end_date
         DB::table('suppliers')
+             ->where('supplier', $supplier_id)
             ->whereBetween('date', [$startDate, $endDate])
             ->update(['status' => 0]);
     }
