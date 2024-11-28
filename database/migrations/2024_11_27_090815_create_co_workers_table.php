@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('co_workers', function (Blueprint $table) {
             $table->id();
             $table->integer('co_worker_id'); // Co-worker's name
+            $table->integer('supplier_id'); // supplier's name
             $table->timestamp('date_and_time'); // Date and time
             $table->integer('ns'); // Normal saree count
             $table->integer('bs'); // Border saree count

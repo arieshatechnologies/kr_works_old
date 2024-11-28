@@ -49,7 +49,8 @@ class CoWorkerController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'co_worker_name' => 'required|string|max:255',
+            'co_worker_id' => 'required|integer',
+            'supplier_id' => 'required|integer',
             'date_and_time' => 'required|date',
             'ns' => 'required|integer',
             'bs' => 'required|integer',
@@ -91,7 +92,8 @@ class CoWorkerController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'co_worker_id' => 'sometimes|required|integer|max:255',
+            'co_worker_id' => 'sometimes|required|integer',
+            'supplier_id' => 'sometimes|required|integer',
             'date_and_time' => 'sometimes|required|date',
             'ns' => 'sometimes|required|integer',
             'bs' => 'sometimes|required|integer',

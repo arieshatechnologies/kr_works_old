@@ -11,6 +11,7 @@ class CoWorker extends Model
 
     protected $fillable = [
         'co_worker_id',
+        'supplier_id',
         'date_and_time',
         'ns',
         'bs',
