@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('rns'); // return
             $table->integer('rbs'); // return
             $table->integer('rbbs'); // return
+            $table->integer('status')->default(0); // return
             $table->timestamps();
         });
     }

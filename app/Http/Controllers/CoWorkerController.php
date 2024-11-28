@@ -99,6 +99,7 @@ class CoWorkerController extends Controller
             'rns' => 'sometimes|required|integer',
             'rbs' => 'sometimes|required|integer',
             'rbbs' => 'sometimes|required|integer',
+            'status' => 'required|integer',
         ]);
 
         if ($validator->fails()) {

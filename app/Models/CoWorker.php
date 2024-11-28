@@ -18,6 +18,7 @@ class CoWorker extends Model
         'rns',
         'rbs',
         'rbbs',
+        'status',
     ];
 }
 
