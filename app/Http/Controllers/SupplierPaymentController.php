@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\supplier_payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class SupplierPaymentController extends Controller
 {
@@ -50,6 +51,8 @@ class SupplierPaymentController extends Controller
             ], 422);
         }
 
+        $this->updateSuppliersStatus($request->startDate, $request->endDate);
+
         $supplier = supplier_payment::create($validator->validated());
 
         return response()->json([
@@ -90,7 +93,7 @@ class SupplierPaymentController extends Controller
                 'message' => $validator->errors()->first(), // Get the first validation error
             ], 422);
         }
-        
+        $this->updateSuppliersStatus($request->startDate, $request->endDate);
         // Proceed with storing the data
         $validated = $validator->validated();
 
@@ -113,5 +116,14 @@ class SupplierPaymentController extends Controller
         $supplier->delete();
 
         return response()->json(["status" => "success","message" => "Record deleted successfully."], 204);
+    }
+
+
+    public function updateSuppliersStatus($startDate, $endDate)
+    {
+        // Update the suppliers table where the date is between start_date and end_date
+        DB::table('suppliers')
+            ->whereBetween('date', [$startDate, $endDate])
+            ->update(['status' => 0]);
     }
 }
