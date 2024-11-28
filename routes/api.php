@@ -11,7 +11,7 @@ use App\Http\Controllers\SupplierdetailsController;
 // })->middleware('auth:sanctum');
 
 
-Route::apiResource('suppliers', SupplierController::class);
+// Route::apiResource('suppliers', SupplierController::class);
 Route::get('/co-workers', [CoWorkerController::class, 'index']);
 Route::post('/co-workers', [CoWorkerController::class, 'store']);
 Route::get('/co-workers/{id}', [CoWorkerController::class, 'show']);

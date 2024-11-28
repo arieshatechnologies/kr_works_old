@@ -37,6 +37,7 @@ class SupplierController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'date' => 'required|date',
+            'supplier_id' => 'required|integer',
             'ns' => 'required|integer',
             'bs' => 'required|integer',
             'bbs' => 'required|integer',
@@ -79,6 +80,7 @@ class SupplierController extends Controller
     {
         $validated = $request->validate([
             'date' => 'sometimes|required|date',
+            'supplier_id' => 'sometimes|required|integer',
             'ns' => 'sometimes|required|integer',
             'rns' => 'sometimes|required|integer',
             'bs' => 'sometimes|required|integer',
