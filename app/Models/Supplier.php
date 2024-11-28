@@ -13,6 +13,7 @@ class Supplier extends Model
         'bs',
         'rbs',
         'bbs',
-        'rbbs',
+        'rbbs', 
+        'a_status',
     ];
 }

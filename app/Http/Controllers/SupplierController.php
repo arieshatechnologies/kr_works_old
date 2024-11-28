@@ -85,6 +85,7 @@ class SupplierController extends Controller
             'rbs' => 'sometimes|required|integer',
             'bbs' => 'sometimes|required|integer',
             'rbbs' => 'sometimes|required|integer',
+            'a_status' => 'required|integer',
         ]);
 
         $supplier->update($validated);

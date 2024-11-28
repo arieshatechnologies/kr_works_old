@@ -19,7 +19,8 @@ return new class extends Migration
             $table->integer('bs');
             $table->integer('rbs')->default(0);
             $table->integer('bbs');
-            $table->integer('rbbs')->default(0);
+            $table->integer(column: 'rbbs')->default(0);
+            $table->integer(column: 'a_status')->default(0);
             $table->timestamps();
         });
     }
