@@ -101,10 +101,10 @@ class SupplierController extends Controller
      * @param  \App\Models\Supplier  $supplier
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Request $request)
+    public function destroy($id)
     {
     
-        $supplier = Supplier::find($request->id);
+        $supplier = Supplier::find($id);
     
         if (!$supplier) {
             return response()->json([
@@ -114,6 +114,6 @@ class SupplierController extends Controller
         }
         $supplier->delete();
 
-        return response()->json(["status" => "success","message" => "Record deleted successfully."], 204);
+        return response()->json(["status" => "success","message" => "Record deleted successfully."], 200);
     }
 }

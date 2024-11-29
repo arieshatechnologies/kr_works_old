@@ -125,6 +125,6 @@ class SupplierPaymentController extends Controller
         DB::table('suppliers')
              ->where('supplier', $supplier_id)
             ->whereBetween('date', [$startDate, $endDate])
-            ->update(['status' => 0]);
+            ->update(['a_status' => 0]);
     }
 }
