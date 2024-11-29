@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\CoWorkerController;
 use App\Http\Controllers\SupplierdetailsController;
+use App\Http\Controllers\SupplierPaymentController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -25,4 +26,4 @@ Route::get('/supplierDetails/{id}', [SupplierdetailsController::class, 'show']);
 Route::put('/supplierDetails/{id}', [SupplierdetailsController::class, 'update']); // Update supplier details
 Route::delete('/supplierDetails', [SupplierdetailsController::class, 'destroy']); // Delete a supplier by ID
 
-
+Route::apiResource('suppliersPayments', SupplierPaymentController::class);
