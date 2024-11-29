@@ -27,6 +27,53 @@ class SupplierController extends Controller
         return response()->json(["status"=>"success","message"=>"Suppliers found", "data" => $suppliers], 200);
     }
 
+    public function getSareeCountByDate(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'supplier_id' => 'required|integer'
+        ]);
+
+            // Check if validation fails
+        if ($validator->fails()) {
+            // Return the first error message
+            return response()->json([
+                'status' => 'failure',
+                'message' => $validator->errors()->first(), // Get the first validation error
+            ], 422);
+        }
+        // $suppliers = Supplier::all()->where('supplier_id',$request->supplier_id)->whereBetween('date',[$request->start_date,$request->end_date]);
+        //  // Check if the suppliers list is empty
+        // if ($suppliers->isEmpty()) {
+        //     return response()->json([
+        //         'status' => 'failure',
+        //         'message' => 'No data found',
+        //         'data' => [],
+        //     ], 404);
+        // }
+
+        $sums = Supplier::where('supplier_id', $request->supplier_id)
+        ->whereBetween('date', [$request->start_date, $request->end_date])
+        ->selectRaw('SUM(ns) as total_ns, SUM(bs) as total_bs, SUM(bbs) as total_bbs')
+        ->first();
+        
+        //Access the sums
+        $totalNs = $sums->total_ns;
+        $totalBs = $sums->total_bs;
+        $totalBbs = $sums->total_bbs;
+
+        if ($totalNs == null || $totalBs == null || $totalBbs == null) {
+            return response()->json([
+                'status' => 'failure',
+                'message' => 'No data found',
+                'data' => [],
+            ], 404);
+        }
+
+        return response()->json(["status"=>"success","message"=>"Data found", "ns" => $totalNs, "bs" => $totalBs, "bbs" => $totalBbs], 200);
+    }
+
     /**
      * Store a newly created supplier in storage.
      *

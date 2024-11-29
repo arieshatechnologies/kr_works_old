@@ -13,6 +13,9 @@ use App\Http\Controllers\SupplierPaymentController;
 
 
 Route::apiResource('suppliers', SupplierController::class);
+
+Route::post('/getSareeCountByDate', [SupplierController::class, 'getSareeCountByDate']); 
+
 Route::get('/co-workers', [CoWorkerController::class, 'index']);
 Route::post('/co-workers', [CoWorkerController::class, 'store']);
 Route::get('/co-workers/{id}', [CoWorkerController::class, 'show']);
