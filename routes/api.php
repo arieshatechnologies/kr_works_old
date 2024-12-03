@@ -6,6 +6,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\CoWorkerController;
 use App\Http\Controllers\SupplierdetailsController;
 use App\Http\Controllers\SupplierPaymentController;
+use App\Http\Controllers\CoWorkerPaymentController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -30,3 +31,8 @@ Route::put('/supplierDetails/{id}', [SupplierdetailsController::class, 'update']
 Route::delete('/supplierDetails', [SupplierdetailsController::class, 'destroy']); // Delete a supplier by ID
 
 Route::apiResource('suppliersPayments', SupplierPaymentController::class);
+
+Route::get('/co_worker_payments', [CoWorkerPaymentController::class, 'index']);
+Route::get('/co_worker_payments/{id}', [CoWorkerPaymentController::class, 'showPayments']);
+Route::post('/co_worker_payments/{id}/calculate', [CoWorkerPaymentController::class, 'calculatePayment']);
+Route::put('/co_worker_payments/{id}', [CoWorkerPaymentController::class, 'updatePayment']);
