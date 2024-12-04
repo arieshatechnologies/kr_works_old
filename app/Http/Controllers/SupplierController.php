@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Supplier;
+use App\Models\SupplierDetails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,6 +17,12 @@ class SupplierController extends Controller
     public function index()
     {
         $suppliers = Supplier::all();
+
+        foreach ($suppliers as $supplier) {
+            $supplierName = SupplierDetails::where('id', $supplier->supplier_id)->value('name');
+            $supplier->supplier_name = $supplierName;
+        }
+
          // Check if the suppliers list is empty
         if ($suppliers->isEmpty()) {
             return response()->json([
