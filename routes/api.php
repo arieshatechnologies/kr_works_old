@@ -28,7 +28,7 @@ Route::get('/supplierDetails', [SupplierdetailsController::class, 'index']); // 
 Route::post('/supplierDetails', [SupplierdetailsController::class, 'store']); // Create a new supplier
 Route::get('/supplierDetails/{id}', [SupplierdetailsController::class, 'show']); // Get a specific supplier
 Route::put('/supplierDetails/{id}', [SupplierdetailsController::class, 'update']); // Update supplier details
-Route::delete('/supplierDetails', [SupplierdetailsController::class, 'destroy']); // Delete a supplier by ID
+Route::post('/deleteSupplierDetails', [SupplierdetailsController::class, 'destroy']); // Delete a supplier by ID
 
 Route::apiResource('suppliersPayments', SupplierPaymentController::class);
 
