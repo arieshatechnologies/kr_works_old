@@ -110,7 +110,7 @@ class SupplierController extends Controller
         $validated = $validator->validated();
         $supplier = Supplier::create($validated);
 
-        return response()->json(["status" =>"suceess","message"=>"New supplier details created successfully","data" => $supplier], 201);
+        return response()->json(["status" =>"success","message"=>"New supplier details created successfully","data" => $supplier], 201);
     }
     /**
      * Display the specified supplier.
