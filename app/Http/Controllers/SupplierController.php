@@ -146,7 +146,7 @@ class SupplierController extends Controller
 
         $supplier->update($validated);
 
-        return response()->json(["status"=>"suceess","message"=>"Supplier details updated successfully","data"=>$supplier], 200);
+        return response()->json(["status"=>"success","message"=>"Supplier details updated successfully","data"=>$supplier], 200);
     }
 
     /**
