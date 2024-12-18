@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\supplier_payment;
+use App\Models\SupplierDetails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -10,7 +11,12 @@ class SupplierPaymentController extends Controller
 {
     public function index()
     {
-        $suppliers = supplier_payment::all();
+        $suppliers = supplier_payment::orderBy('id','desc')->limit(100)->get();
+
+        foreach ($suppliers as $supplier) {
+            $supplierName = SupplierDetails::where('id', $supplier->supplier_id)->value('name');
+            $supplier->supplier_name = $supplierName;
+        }
 
         if ($suppliers->isEmpty()) {
             return response()->json([

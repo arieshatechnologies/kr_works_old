@@ -16,7 +16,7 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        $suppliers = Supplier::all();
+        $suppliers = Supplier::orderBy('id','desc')->limit(100)->get();
 
         foreach ($suppliers as $supplier) {
             $supplierName = SupplierDetails::where('id', $supplier->supplier_id)->value('name');
