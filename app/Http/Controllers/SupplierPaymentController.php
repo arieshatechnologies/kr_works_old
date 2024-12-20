@@ -1,41 +1,27 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\supplier_payment;
-use App\Models\SupplierDetails;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
 
 class SupplierPaymentController extends Controller
 {
+    /**
+     * Display a listing of the supplier payments.
+     */
     public function index()
     {
-        $suppliers = supplier_payment::orderBy('id','desc')->limit(100)->get();
-
-        foreach ($suppliers as $supplier) {
-            $supplierName = SupplierDetails::where('id', $supplier->supplier_id)->value('name');
-            $supplier->supplier_name = $supplierName;
-        }
-
-        if ($suppliers->isEmpty()) {
-            return response()->json([
-                'status' => 'failure',
-                'message' => 'No supplier payments found',
-                'data' => [],
-            ], 404);
-        }
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Suppliers payments found',
-            'data' => $suppliers,
-        ], 200);
+        $supplierPayments = supplier_payment::all();
+        return response()->json(['status' => 'success', 'data' => $supplierPayments], 200);
     }
 
+    /**
+     * Store a newly created supplier payment in storage.
+     */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $validated = $request->validate([
             'supplier_id' => 'required|integer',
             'ns' => 'required|integer',
             'bs' => 'required|integer',
@@ -50,87 +36,72 @@ class SupplierPaymentController extends Controller
             'end_date' => 'required|date',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'failure',
-                'message' => $validator->errors()->first(),
-            ], 422);
-        }
+        $supplierPayment = supplier_payment::create($validated);
 
-        $this->updateSuppliersStatus($request->supplier_id, $request->start_Date, $request->endD_ate);
-
-        $supplier = supplier_payment::create($validator->validated());
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Supplier payments created successfully',
-            'data' => $supplier,
-        ], 201);
+        return response()->json(['status' => 'success', 'data' => $supplierPayment], 201);
     }
 
-
-    public function show(supplier_payment $supplier)
+    /**
+     * Display the specified supplier payment.
+     */
+    public function show(supplier_payment $supplierPayment)
     {
-        return response()->json($supplier, 200);
+        return response()->json(['status' => 'success', 'data' => $supplierPayment], 200);
     }
 
-    public function update(Request $request, supplier_payment $supplier)
-    {
-        $validator = Validator::make($request->all(), [
-            'supplier_id' => 'required|integer',
-            'ns' => 'required|integer',
-            'bs' => 'required|integer',
-            'bbs' => 'required|integer',
-            'ans' => 'required|integer',
-            'abs' => 'required|integer',
-            'abbs' => 'required|integer',
-            'total_amount' => 'required|integer',
-            'given_amount' => 'required|integer',
-            'status' => 'required|integer',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
-        ]);
-        
-        // Check if validation fails
-        if ($validator->fails()) {
-            // Return the first error message
-            return response()->json([
-                'status' => 'failure',
-                'message' => $validator->errors()->first(), // Get the first validation error
-            ], 422);
-        }
-        $this->updateSuppliersStatus($request->supplier_id, $request->startDate, $request->endDate);
-        // Proceed with storing the data
-        $validated = $validator->validated();
+    /**
+     * Update the specified supplier payment in storage.
+     */
+    /**
+     * Update the specified supplier in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\supplier_payment  $supplierPayment
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request, $id)
+{
+    // Find the supplier payment by ID
+    $supplierPayment = supplier_payment::find($id);
 
-        $supplier->update($validated);
-
-        return response()->json(["status"=>"suceess","message"=>"Supplier payments details updated successfully","data"=>$supplier], 200);
+    // If the supplier payment does not exist, return an error
+    if (!$supplierPayment) {
+        return response()->json(['status' => 'error', 'message' => 'Supplier payment not found'], 404);
     }
 
-    public function destroy(Request $request)
+    // Validate the incoming data
+    $validated = $request->validate([
+        'supplier_id' => 'sometimes|integer',
+        'ns' => 'sometimes|integer',
+        'bs' => 'sometimes|integer',
+        'bbs' => 'sometimes|integer',
+        'ans' => 'sometimes|integer',
+        'abs' => 'sometimes|integer',
+        'abbs' => 'sometimes|integer',
+        'total_amount' => 'sometimes|integer',
+        'given_amount' => 'sometimes|integer',
+        'status' => 'sometimes|integer',
+        'start_date' => 'sometimes|date|nullable',
+        'end_date' => 'sometimes|date|nullable',
+    ]);
+
+    // Manually update the fields
+    $supplierPayment->update($validated);
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Supplier payment updated successfully',
+        'data' => $supplierPayment,
+    ], 200);
+}
+
+    /**
+     * Remove the specified supplier payment from storage.
+     */
+    public function destroy(supplier_payment $supplierPayment)
     {
-    
-        $supplier = supplier_payment::find($request->id);
-    
-        if (!$supplier) {
-            return response()->json([
-                'status' => 'failure',
-                'message' => 'Supplier payments not found',
-            ], 404);
-        }
-        $supplier->delete();
+        $supplierPayment->delete();
 
-        return response()->json(["status" => "success","message" => "Record deleted successfully."], 204);
-    }
-
-
-    public function updateSuppliersStatus($supplier_id,$startDate, $endDate)
-    {
-        // Update the suppliers table where the date is between start_date and end_date
-        DB::table('suppliers')
-             ->where('supplier_id', $supplier_id)
-            ->whereBetween('date', [$startDate, $endDate])
-            ->update(['a_status' => 1]);
+        return response()->json(['status' => 'success', 'message' => 'Supplier payment deleted successfully'], 200);
     }
 }
