@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\supplier_payment;
 use App\Models\SupplierDetails;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SupplierPaymentController extends Controller
 {
@@ -45,9 +46,13 @@ class SupplierPaymentController extends Controller
             'status' => 'required|integer',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
+            
         ]);
 
         $supplierPayment = supplier_payment::create($validated);
+    
+        $this->updateSuppliersStatus($request->supplier_id, $request->start_date, $request->end_date);
+
 
         return response()->json(['status' => 'success', 'data' => $supplierPayment], 201);
     }
@@ -102,6 +107,7 @@ class SupplierPaymentController extends Controller
 
         // Manually update the fields
         $supplierPayment->update($validated);
+        $this->updateSuppliersStatus($request->supplier_id, $request->start_date, $request->end_date);
 
         return response()->json([
             'status' => 'success',
@@ -127,5 +133,13 @@ class SupplierPaymentController extends Controller
         $supplierPayment->delete();
 
         return response()->json(['status' => 'success', 'message' => 'Supplier payment deleted successfully'], 200);
+    }
+    public function updateSuppliersStatus($supplier_id,$startDate, $endDate)
+    {
+        // Update the suppliers table where the date is between start_date and end_date
+        DB::table('suppliers')
+             ->where('supplier_id', $supplier_id)
+            ->whereBetween('date', [$startDate, $endDate])
+            ->update(['a_status' => 1]);
     }
 }
