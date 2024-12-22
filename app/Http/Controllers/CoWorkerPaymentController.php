@@ -2,32 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CoWorker;
+use App\Models\CoWorkerDetails;
 use App\Models\CoWorkerPayment;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class CoWorkerPaymentController extends Controller
 {
-    public function calculatePayment($id)
+    public function index()
     {
-        $coWorker = CoWorker::find($id);
+        $coWorkerPayments = CoWorkerPayment::all();
 
-        if (!$coWorker) {
-            return response()->json([
-                'status' => 'failure',
-                'message' => 'Co-worker not found',
-            ], 404);
+        if ($coWorkerPayments->isEmpty()) {
+            return response()->json(['status' => 'error', 'message' => 'No data found'], 404);
         }
 
-        $totalSarees = $coWorker->ns + $coWorker->bs + $coWorker->bbs;
-        $returnedSarees = $coWorker->rns + $coWorker->rbs + $coWorker->rbbs;
-        $paymentPerSaree = 100; // Example rate
+        foreach ($coWorkerPayments as $coWorker) {
+            $coWorkerName = CoWorkerDetails::where('id', $coWorker->co_worker_id)->value('name');
+            $coWorker->co_worker_name = $coWorkerName;
+        }
 
-        $totalAmount = ($totalSarees - $returnedSarees) * $paymentPerSaree;
+        return response()->json(['status' => 'success', 'data' => $coWorkerPayments], 200);
+    }
+    // Method to calculate the payment for a co-worker
+    public function calculatePayment($coWorkerId)
+    {
+        $totalSarees = 100; // Example saree count, you can fetch from DB
+        $returnedSarees = 10; // Example count
+        $ratePerSaree = 100; // Example rate
+
+        $totalAmount = ($totalSarees - $returnedSarees) * $ratePerSaree;
 
         $payment = CoWorkerPayment::updateOrCreate(
-            ['co_worker_id' => $coWorker->id],
+            ['co_worker_id' => $coWorkerId],
             [
                 'total_sarees' => $totalSarees,
                 'returned_sarees' => $returnedSarees,
@@ -44,81 +51,94 @@ class CoWorkerPaymentController extends Controller
             'data' => $payment,
         ], 200);
     }
-
-    public function updatePayment(Request $request, $id)
+    public function store(Request $request)
     {
-        $payment = CoWorkerPayment::find($id);
-
-        if (!$payment) {
-            return response()->json([
-                'status' => 'failure',
-                'message' => 'Payment record not found',
-            ], 404);
-        }
-
-        $validator = Validator::make($request->all(), [
-            'paid_amount' => 'required|integer|min:1',
+        $validated = $request->validate([
+            'co_worker_id' => 'required|integer',
+            'ns' => 'required|integer',
+            'bs' => 'required|integer',
+            'bbs' => 'required|integer',
+            'ans' => 'required|integer',
+            'abs' => 'required|integer',
+            'abbs' => 'required|integer',
+            'total_amount' => 'required|integer',
+            'given_amount' => 'required|integer',
+            'status' => 'required|integer',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'failure',
-                'message' => $validator->errors()->first(),
-            ], 422);
+        $coWorkerPayment = CoWorkerPayment::create($validated);
+    
+        $this->updateCoWorkerPayment($request->co_worker_id, $request->start_date, $request->end_date);
+
+
+        return response()->json(['status' => 'success', 'data' => $coWorkerPayment], 201);
+    }
+
+
+    public function update(Request $request, $id)
+    {
+        // Find the supplier payment by ID
+        $coWorkerPayments= CoWorkerPayment::find($id);
+
+        // If the supplier payment does not exist, return an error
+        if (!$coWorkerPayments) {
+            return response()->json(['status' => 'error', 'message' => 'Co-Workers payment not found'], 404);
         }
 
-        $payment->paid_amount += $request->paid_amount;
-        $payment->balance_amount = $payment->total_amount - $payment->paid_amount;
+        // Validate the incoming data
+        $validated = $request->validate([
+            'co_worker_id' => 'sometimes|integer',
+            'ns' => 'sometimes|integer',
+            'bs' => 'sometimes|integer',
+            'bbs' => 'sometimes|integer',
+            'ans' => 'sometimes|integer',
+            'abs' => 'sometimes|integer',
+            'abbs' => 'sometimes|integer',
+            'total_amount' => 'sometimes|integer',
+            'given_amount' => 'sometimes|integer',
+            'status' => 'sometimes|integer',
+            'start_date' => 'sometimes|date|nullable',
+            'end_date' => 'sometimes|date|nullable',
+        ]);
 
-        if ($payment->balance_amount <= 0) {
-            $payment->status = 2; // Fully paid
-            $payment->balance_amount = 0;
-        } else {
-            $payment->status = 1; // Partially paid
-        }
-
-        $payment->save();
+        // Manually update the fields
+        $coWorkerPayments->update($validated);
+        $this->updateCoWorkerPayment($request->co_worker_id, $request->start_date, $request->end_date);
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Payment updated successfully',
-            'data' => $payment,
+            'message' => 'Co-Worker payment updated successfully',
+            'data' => $coWorkerPayments,
         ], 200);
     }
 
-    public function showPayments($id)
+    // Method to fetch all payments for a specific co-worker
+   
+     public function updateCoWorkerPayment($co_worker_id,$startDate, $endDate)
     {
-        $payments = CoWorkerPayment::where('co_worker_id', $id)->get();
-
-        if ($payments->isEmpty()) {
-            return response()->json([
-                'status' => 'failure',
-                'message' => 'No payment records found for this co-worker',
-            ], 404);
-        }
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Payment records retrieved successfully',
-            'data' => $payments,
-        ], 200);
+        // Update the suppliers table where the date is between start_date and end_date
+        DB::table('co_workers')
+             ->where('co_worker_id', $co_worker_id)
+            ->whereBetween('date_and_time', [$startDate, $endDate])
+            ->update(['status' => 1]);
     }
-
-    public function index()
+    public function destroy(Request $request, $id)
     {
-        $payments = CoWorkerPayment::all();
-
-        if ($payments->isEmpty()) {
+        // Find the supplier payment by ID
+        $coWorkerPayments = CoWorkerPayment::find($id);
+        // Check if the supplier payment exists
+        if (!$coWorkerPayments) {
             return response()->json([
-                'status' => 'failure',
-                'message' => 'No payment records found',
+                'status' => 'error',
+                'message' => 'Co-Woeker payment not found',
             ], 404);
         }
+        $coWorkerPayments->delete();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Payment records retrieved successfully',
-            'data' => $payments,
-        ], 200);
+        return response()->json(['status' => 'success', 'message' => 'Co-Worker payment deleted successfully'], 200);
     }
 }
+

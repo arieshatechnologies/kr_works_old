@@ -13,13 +13,18 @@ return new class extends Migration
     {
         Schema::create('co_worker_payments', function (Blueprint $table) {
             $table->id();
-            $table->integer('co_worker_id'); // Co-worker ID
-            $table->integer('total_sarees'); // Total sarees distributed
-            $table->integer('returned_sarees'); // Total returned sarees
-            $table->integer('total_amount'); // Total payment calculated
-            $table->integer('paid_amount'); // Amount paid
-            $table->integer('balance_amount'); // Remaining balance
-            $table->integer('status')->default(0); // Payment status (0=unpaid, 1=partially paid, 2=fully paid)
+            $table->integer('co_worker_id');
+            $table->integer('ns'); // Normal saree count
+            $table->integer('bs'); // Border saree count
+            $table->integer('bbs'); // Big border saree count
+            $table->integer('ans');
+            $table->integer('abs');
+            $table->integer('abbs');
+            $table->integer('total_amount');
+            $table->integer('given_amount');
+            $table->integer('status')->default(0);
+            $table->timestamp('start_date')->nullable(); // Date and time
+            $table->timestamp('end_date')->nullable(); // Date and time
             $table->timestamps();
         });
     }

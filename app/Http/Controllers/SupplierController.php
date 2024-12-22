@@ -155,19 +155,64 @@ class SupplierController extends Controller
      * @param  \App\Models\Supplier  $supplier
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-    
-        $supplier = Supplier::find($id);
-    
+        $supplier = Supplier::find($request->id);
+
         if (!$supplier) {
             return response()->json([
                 'status' => 'failure',
-                'message' => 'Supplier not found',
+                'message' => 'Co-worker not found',
             ], 404);
         }
+
         $supplier->delete();
 
-        return response()->json(["status" => "success","message" => "Record deleted successfully."], 200);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Co-worker deleted successfully',
+        ], 200);
     }
+    public function filterByDate(Request $request)
+{
+    // Validate the incoming request parameters
+    $validator = Validator::make($request->all(), [
+        'start_date' => 'required|date',
+        'end_date' => 'required|date',
+    ]);
+
+    // If validation fails, return a failure response with validation errors
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => 'failure',
+            'message' => $validator->errors()->first(), // Get the first validation error
+        ], 422);
+    }
+
+    // Retrieve the start and end dates from the request
+    $startDate = $request->start_date;
+    $endDate = $request->end_date;
+
+    // Query suppliers between the given date range
+    $suppliers = Supplier::whereBetween('date', [$startDate, $endDate])
+        ->orderBy('date', 'desc')
+        ->get();
+
+    // If no suppliers found in the date range, return a failure response
+    if ($suppliers->isEmpty()) {
+        return response()->json([
+            'status' => 'failure',
+            'message' => 'No suppliers found in the specified date range',
+            'data' => [],
+        ], 404);
+    }
+
+    // Otherwise, return a success response with the filtered suppliers
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Suppliers found within the specified date range',
+        'data' => $suppliers,
+    ], 200);
+}
+
 }

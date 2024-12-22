@@ -7,15 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class CoWorkerPayment extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'co_worker_id',
-        'total_sarees',
-        'returned_sarees',
+        'ns',
+        'bs',
+        'bbs',
+        'ans',
+        'abs',
+        'abbs',
         'total_amount',
-        'paid_amount',
-        'balance_amount',
+        'given_amount',
         'status',
+        'start_date',
+        'end_date',
     ];
+
 }

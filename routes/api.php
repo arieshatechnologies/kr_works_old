@@ -24,8 +24,9 @@ Route::get('/co-workers', [CoWorkerController::class, 'index']);
 Route::post('/co-workers', [CoWorkerController::class, 'store']);
 Route::get('/co-workers/{id}', [CoWorkerController::class, 'show']);
 Route::put('/co-workers/{id}', [CoWorkerController::class, 'update']);
-Route::post('/co-workers/delete', [CoWorkerController::class, 'destroy']);
+Route::delete('/co-workers/{id}', [CoWorkerController::class, 'destroy']); // Delete a supplier by ID
 Route::post('/co-workers/getFilteredData', [CoWorkerController::class, 'getFilteredData']);
+Route::post('/getCoWorkersSareeCountByDate', [CoWorkerController::class, 'getSareeCountByDate']); 
 
 
 Route::get('/supplierDetails', [SupplierdetailsController::class, 'index']); // List all suppliers
@@ -36,10 +37,13 @@ Route::delete('/supplierDetails/{id}', [SupplierdetailsController::class, 'destr
 
 Route::apiResource('suppliersPayments', SupplierPaymentController::class);
 
-Route::get('/co_worker_payments', [CoWorkerPaymentController::class, 'index']);
-Route::get('/co_worker_payments/{id}', [CoWorkerPaymentController::class, 'showPayments']);
-Route::post('/co_worker_payments/{id}/calculate', [CoWorkerPaymentController::class, 'calculatePayment']);
-Route::put('/co_worker_payments/{id}', [CoWorkerPaymentController::class, 'updatePayment']);
+
+
+Route::post('/coWorkerPayments', [CoWorkerPaymentController::class, 'store']);
+Route::get('/coWorkerPayments', [CoWorkerPaymentController::class, 'index']);
+Route::put('/coWorkerPayments/{id}', [CoWorkerPaymentController::class, 'update']);
+Route::delete('/coWorkerPayments/{id}', [CoWorkerPaymentController::class, 'destroy']); // Delete a supplier by ID
+
 
 
 Route::get('/co-worker-details', [CoWorkerDetailsController::class, 'index']);
@@ -47,3 +51,5 @@ Route::post('/co-worker-details', [CoWorkerDetailsController::class, 'store']);
 Route::get('/co-worker-details/{id}', [CoWorkerDetailsController::class, 'show']);
 Route::put('/co-worker-details/{id}', [CoWorkerDetailsController::class, 'update']);
 Route::delete('/co-worker-details/{id}', [CoWorkerDetailsController::class, 'destroy']);
+
+
