@@ -15,6 +15,8 @@ use App\Http\Controllers\CoWorkerPaymentController;
 
 
 Route::apiResource('suppliers', SupplierController::class);
+Route::get('/suppliers/filter', [SupplierController::class, 'filterByDate']);
+
 
 Route::post('/getSareeCountByDate', [SupplierController::class, 'getSareeCountByDate']); 
 
@@ -23,6 +25,7 @@ Route::post('/co-workers', [CoWorkerController::class, 'store']);
 Route::get('/co-workers/{id}', [CoWorkerController::class, 'show']);
 Route::put('/co-workers/{id}', [CoWorkerController::class, 'update']);
 Route::post('/co-workers/delete', [CoWorkerController::class, 'destroy']);
+Route::post('/co-workers/getFilteredData', [CoWorkerController::class, 'getFilteredData']);
 
 
 Route::get('/supplierDetails', [SupplierdetailsController::class, 'index']); // List all suppliers

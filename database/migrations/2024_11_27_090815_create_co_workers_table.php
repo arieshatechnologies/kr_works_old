@@ -19,9 +19,9 @@ return new class extends Migration
             $table->integer('ns'); // Normal saree count
             $table->integer('bs'); // Border saree count
             $table->integer('bbs'); // Big border saree count
-            $table->integer('rns'); // return
-            $table->integer('rbs'); // return
-            $table->integer('rbbs'); // return
+            $table->integer('rns')->default(0); // return
+            $table->integer('rbs')->default(0);// return
+            $table->integer('rbbs')->default(0); // return
             $table->integer('status')->default(0); // return
             $table->timestamps();
         });
