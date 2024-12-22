@@ -155,14 +155,14 @@ class SupplierController extends Controller
      * @param  \App\Models\Supplier  $supplier
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request,$id)
     {
-        $supplier = Supplier::find($request->id);
+        $supplier = Supplier::find($id);
 
         if (!$supplier) {
             return response()->json([
                 'status' => 'failure',
-                'message' => 'Co-worker not found',
+                'message' => 'Supplier not found',
             ], 404);
         }
 
@@ -170,7 +170,7 @@ class SupplierController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Co-worker deleted successfully',
+            'message' => 'Supplier details deleted successfully',
         ], 200);
     }
     public function filterByDate(Request $request)
