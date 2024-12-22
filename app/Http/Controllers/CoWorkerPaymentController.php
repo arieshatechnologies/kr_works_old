@@ -11,7 +11,7 @@ class CoWorkerPaymentController extends Controller
 {
     public function index()
     {
-        $coWorkerPayments = CoWorkerPayment::all();
+        $coWorkerPayments = CoWorkerPayment::orderBy('id','desc')->get();;
 
         if ($coWorkerPayments->isEmpty()) {
             return response()->json(['status' => 'error', 'message' => 'No data found'], 404);

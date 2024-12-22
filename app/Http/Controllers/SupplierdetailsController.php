@@ -10,7 +10,7 @@ class SupplierdetailsController extends Controller
 {
     public function index()
     {
-        $suppliers = SupplierDetails::all();
+        $suppliers = SupplierDetails::orderBy('id','desc')->get();;
 
         if ($suppliers->isEmpty()) {
             return response()->json([

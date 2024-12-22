@@ -17,7 +17,7 @@ class CoWorkerController extends Controller
      */
     public function index()
     {
-        $coWorkers = CoWorker::all();
+        $coWorkers = CoWorker::orderBy('id','desc')->get();
 
         if ($coWorkers->isEmpty()) {
             return response()->json([

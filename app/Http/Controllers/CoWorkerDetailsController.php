@@ -9,7 +9,7 @@ class CoWorkerDetailsController extends Controller
 {   
     public function index()
     {
-        $coWorkers = CoWorkerDetails::all();
+        $coWorkers = CoWorkerDetails::orderBy('id','desc')->get();;
     
         if ($coWorkers->isEmpty()) {
             return response()->json([

@@ -14,7 +14,7 @@ class SupplierPaymentController extends Controller
      */
     public function index()
     {
-        $supplierPayments = supplier_payment::all();
+        $supplierPayments = supplier_payment::orderBy('id','desc')->get();;
 
         if ($supplierPayments->isEmpty()) {
             return response()->json(['status' => 'error', 'message' => 'No data found'], 404);
