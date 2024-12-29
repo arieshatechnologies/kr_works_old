@@ -89,7 +89,7 @@ class OtpController extends Controller
     public static function buildOtpEmailBody($otp)
     {
         // Company name
-        $companyName = "SB Tex";
+        $companyName = "KR Works";
 
         // Generate unique HTML content
         $htmlContent = "
