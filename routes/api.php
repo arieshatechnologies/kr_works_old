@@ -8,10 +8,20 @@ use App\Http\Controllers\SupplierdetailsController;
 use App\Http\Controllers\CoWorkerDetailsController;
 use App\Http\Controllers\SupplierPaymentController;
 use App\Http\Controllers\CoWorkerPaymentController;
+use App\Http\Controllers\MailController;
+use App\Http\Controllers\OtpController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');
+use App\Http\Controllers\AuthController;
+
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('user', [AuthController::class, 'user']);
+    Route::post('logout', [AuthController::class, 'logout']);
+});
 
 
 Route::apiResource('suppliers', SupplierController::class);
@@ -52,4 +62,9 @@ Route::get('/co-worker-details/{id}', [CoWorkerDetailsController::class, 'show']
 Route::put('/co-worker-details/{id}', [CoWorkerDetailsController::class, 'update']);
 Route::delete('/co-worker-details/{id}', [CoWorkerDetailsController::class, 'destroy']);
 
+
+
+Route::get('/send-email', [MailController::class, 'sendEmail']);
+Route::post('send-otp', [OtpController::class,'send']);
+Route::post('verify-otp', [OtpController::class,'verify']);
 
