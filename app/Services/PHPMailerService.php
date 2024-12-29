@@ -21,11 +21,11 @@ class PHPMailerService
         try {
             // Server settings
             $this->mailer->isSMTP();
-            $this->mailer->Host = "mail.ariesha.com";
+            $this->mailer->Host = "mail.ariesha.in";
             $this->mailer->SMTPAuth = true;
             $this->mailer->SMTPSecure = "tls";
-            $this->mailer->Username = "support@sbtextiles.ariesha.com";
-            $this->mailer->Password = "y.jW)gh9j=.O";
+            $this->mailer->Username = "support@krworks.ariesha.in";
+            $this->mailer->Password = "kr_works@123";
             $this->mailer->Port = 587;
 
             // Disable certificate verification temporarily
@@ -38,8 +38,8 @@ class PHPMailerService
             ];
 
             // Sender info
-            $fromAddress = "support@sbtextiles.ariesha.com";
-            $fromName = 'SB TEXTILES';
+            $fromAddress = "support@krworks.ariesha.com";
+            $fromName = 'KR Works';
 
             if (empty($fromAddress)) {
                 throw new \Exception('MAIL_FROM_ADDRESS is not set in the .env file.');
